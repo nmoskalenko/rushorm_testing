@@ -5,12 +5,10 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
 import java.util.Arrays;
-import java.util.List;
 
 import co.uk.rushorm.core.RushSearch;
-import rushtest.test.com.rushtest.objects.W;
-import rushtest.test.com.rushtest.objects.E;
 import rushtest.test.com.rushtest.objects.C;
+import rushtest.test.com.rushtest.objects.E;
 import rushtest.test.com.rushtest.objects.P;
 
 public class MainActivity extends AppCompatActivity {
@@ -20,43 +18,33 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+
+        // Create 2 different C objects and save it
         C objC = new C("objC");
         objC.save();
 
         C objC2 = new C("objC2");
         objC2.save();
 
-
+       // Create E object with the list of 2 C objects
         E objE = new E("objE", Arrays.asList(new RushSearch().whereEqual("name", "objC").findSingle(C.class),
                                              new RushSearch().whereEqual("name", "objC2").findSingle(C.class))
         );
         objE.save();
 
+        // Create P object with the list of SAME E objects
+        // If we load E object once, and add to list, everything works OK
+        // But if we load exactly the same object twice, problem occurs.
         P objP = new P(Arrays.asList(new RushSearch().whereEqual("name", "objE").findSingle(E.class),
-                new RushSearch().whereEqual("name", "objE").findSingle(E.class),
                 new RushSearch().whereEqual("name", "objE").findSingle(E.class)));
+
+        // It seems here 2 exactly the same E objects are saving
         objP.save();
 
-        W objA = new W(new RushSearch().findSingle(P.class));
-        objA.save();
 
-        objA.setName("test1");
-        objA.save();
-
-        objA.setName("test2");
-        objA.save();
-
-        objA.setName("test2");
-        objA.save();
-
-
-        List<E> list = new RushSearch().find(E.class);
-        for (E c : list) {
-
-            // Actual 6, should be 3
-            Log.e("Tag", String.valueOf(c.list.size()));
-        }
-
+        // we have 4 objects here, expected 2
+        long count = new RushSearch().count(C.class);
+        Log.e("RUSH_TEST", String.valueOf(count));
 
     }
 
