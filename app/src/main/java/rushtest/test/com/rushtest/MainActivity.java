@@ -42,9 +42,23 @@ public class MainActivity extends AppCompatActivity {
         objP.save();
 
 
+        // ALREADY FIXED IN 1.1.8
         // we have 4 objects here, expected 2
-        long count = new RushSearch().count(C.class);
-        Log.e("RUSH_TEST", String.valueOf(count));
+//        long count = new RushSearch().count(C.class);
+//        Log.e("RUSH_TEST", String.valueOf(count));
+
+
+        // STILL NOT FIXED IN 1.1.8
+        E eObj = new RushSearch().findSingle(E.class);
+        // we have 4 objects here, expected 2
+        Log.e("RUSH_TEST", String.valueOf(eObj.list.size()));
+
+
+        objC.delete();
+        objC2.delete();
+        objE.delete();
+        objP.delete();
+
 
     }
 
